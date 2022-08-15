@@ -1,18 +1,16 @@
 package com.vk.weatherappcompose.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +22,7 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.vk.weatherappcompose.R
+import com.vk.weatherappcompose.data.WeatherModel
 import com.vk.weatherappcompose.ui.theme.LightBlue
 import kotlinx.coroutines.launch
 
@@ -155,9 +154,30 @@ fun TabLayout() {
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(15) {
-                    ListItem()
-                }
+                itemsIndexed(
+                    listOf(
+                        WeatherModel(
+                            city = "London",
+                            time = "12:00",
+                            currentTemp = "",
+                            condition = "sunny",
+                            icon = "//cdn.weatherapi.com/weather/64x64/day/113.png",
+                            maxTemp = "27C",
+                            minTemp = "19C",
+                            hours = "12:00"
+                        ),
+                        WeatherModel(
+                            city = "London",
+                            time = "13:00",
+                            currentTemp = "24C",
+                            condition = "sunny",
+                            icon = "//cdn.weatherapi.com/weather/64x64/day/113.png",
+                            maxTemp = "",
+                            minTemp = "",
+                            hours = ""
+                        )
+                    )
+                ) { _, item -> ListItem(item) }
             }
         }
     }

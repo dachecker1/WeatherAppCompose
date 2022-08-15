@@ -9,43 +9,47 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.vk.weatherappcompose.data.WeatherModel
 import com.vk.weatherappcompose.ui.theme.LightBlue
 
-@Preview(showBackground = true)
 @Composable
-fun ListItem() {
+fun ListItem(item: WeatherModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 5.dp, end = 5.dp, top = 3.dp),
+            .padding(top = 3.dp),
         backgroundColor = LightBlue,
         elevation = 0.dp,
         shape = RoundedCornerShape(5.dp)
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-            ) {
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Column(Modifier.padding(start = 5.dp, top = 2.dp, bottom = 2.dp)) {
-                Text(text = "12:00",
+                Text(text = item.time,
                     style = TextStyle(
                         color = Color.White,
                         fontSize = 18.sp
                     )
                 )
-                Text(text = "Sunny",
+                Text(text = item.condition,
                     style = TextStyle(
                         color = Color.White,
                         fontSize = 18.sp
                     )
                 )
             }
-            Text(text = "25 C", style = TextStyle(color = Color.White, fontSize = 32.sp))
+            Text(
+                text = item.currentTemp.ifEmpty {
+                    "${item.maxTemp}/${item.minTemp}"
+                },
+                style = TextStyle(color = Color.White, fontSize = 32.sp)
+            )
             AsyncImage(
-                model = "https://cdn.weatherapi.com/weather/64x64/day/113.png",
+                model = "https:${item.icon}",
                 contentDescription = "image",
                 modifier = Modifier
                     .padding(end = 10.dp)
