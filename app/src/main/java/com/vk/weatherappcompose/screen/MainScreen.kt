@@ -3,14 +3,13 @@ package com.vk.weatherappcompose.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -19,23 +18,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
 import com.vk.weatherappcompose.R
 import com.vk.weatherappcompose.ui.theme.LightBlue
+import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
 @Composable
-fun MainScreen() {
-    Image(
-        painter = painterResource(id = R.drawable.wallpaper),
-        contentDescription = "wallpaper",
-        modifier = Modifier
-            .fillMaxSize()
-            .alpha(0.5F),
-        contentScale = ContentScale.FillBounds
-    )
+fun MainCard() {
     Column(
         modifier = Modifier
-            .fillMaxSize()
             .padding(5.dp)
     ) {
         Card(
@@ -72,7 +67,7 @@ fun MainScreen() {
                     color = Color.White
                 )
                 Text(
-                    text = "24 C",
+                    text = "23ºC",
                     style = TextStyle(fontSize = 48.sp),
                     color = Color.White
                 )
@@ -96,7 +91,7 @@ fun MainScreen() {
                     }
                     Text(
                         modifier = Modifier.padding(top = 10.dp),
-                        text = "23 C / 12 C",
+                        text = "23ºС/12ºC",
                         style = TextStyle(fontSize = 16.sp),
                         color = Color.White
                     )
@@ -113,4 +108,51 @@ fun MainScreen() {
             }
         }
     }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Preview
+@Composable
+fun TabLayout() {
+    val tabList = listOf("HOURS", "DAYS")
+    val pagerState = rememberPagerState()
+    val tabIndex = pagerState.currentPage
+    val coroutineScope = rememberCoroutineScope()
+    Column(
+        modifier = Modifier
+            .padding(start = 5.dp, end = 5.dp)
+            .clip(RoundedCornerShape(5.dp))
+    ) {
+        TabRow(
+            selectedTabIndex = tabIndex,
+            indicator = { pos ->
+                TabRowDefaults.Indicator(
+                    Modifier.pagerTabIndicatorOffset(pagerState, pos)
+                )
+            },
+            backgroundColor = LightBlue,
+            contentColor = Color.White
+        ) {
+            tabList.forEachIndexed { index, text ->
+                Tab(
+                    selected = false,
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    },
+                    text = {
+                        Text(text = text)
+                    })
+            }
+        }
+        HorizontalPager(
+            count = tabList.size,
+            state = pagerState,
+            modifier = Modifier.weight(1F)
+        ) { index ->
+            
+        }
+    }
+
 }
